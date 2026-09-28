@@ -6,7 +6,7 @@ Tailwind kept (scaffold default): presentable page, no CSS files; cost is JSX no
 One route, `/`. No routing between views, no route handlers, no API.
 - `app/page.tsx` — server component. Static shell + `<WeightTracker />`.
 - `app/components/weight-tracker.tsx` — `"use client"`. Owns all entry state, picks which view to render.
-- `app/components/weight-form.tsx` — `"use client"`. Props: `onAdd(weightKg: number, recordedAt: string)` and `disabled: boolean`. Holds only its own input strings.
+- `app/components/weight-form.tsx` — `"use client"`. Props: `onAdd(weightKg: number, recordedAt: string)` and `disabled: boolean`. Holds only its own input strings, seeding the date itself with `useEffect(() => setDate(todayLocal()), [])`.
 - `app/components/weight-chart.tsx` — `"use client"`. Takes `entries` as a prop.
 - `app/lib/types.ts` + `app/lib/storage.ts` — types, localStorage layer.
 - `app/layout.tsx` — untouched scaffold.
@@ -36,7 +36,7 @@ means "not yet read from storage"; that distinction makes section 3 work.
 the first client render differ from the server HTML — a hydration error.
 `useWeightEntries()` in `app/lib/storage.ts`:
 1. `useState<WeightEntries | null>(null)` — server and first client render both see `null` and emit the same placeholder, so hydration matches.
-2. `useEffect(() => setEntries(load()), [])` — the read happens after hydration, in an effect that never runs on the server. The same mount effect sets the date field to today (§5), so no client-only value is computed during render.
+2. `useEffect(() => setEntries(load()), [])` — the read happens after hydration, in an effect that never runs on the server. The date field seeds itself the same way, in `weight-form`'s own mount effect (§1), so no client-only value is computed during render.
 3. `addEntry` is the sole writer. Writes are explicit there rather than in a `useEffect` on `entries` so there is exactly one write path and the load effect persists nothing at all. (The `null` sentinel would make an effect-write safe; two write paths is the thing worth avoiding.)
 4. `load()` validates instead of trusting: try/catch `JSON.parse`, then `Array.isArray`, then per-entry checks — `typeof id === "string"`, finite `weightKg > 0`, `recordedAt` matching `/^\d{4}-\d{2}-\d{2}$/` — filtering out non-conforming entries. Valid-but-wrong-shape data (`{}`, an older schema, a hand-edited value) yields `[]` rather than throwing inside `.map`; §6 declines an error boundary, so a throw here would be a white screen.
 

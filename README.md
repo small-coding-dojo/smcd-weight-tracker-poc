@@ -1,5 +1,12 @@
 # Weight Tracker
 
+>[!NOTE]
+>This application has been vibe coded.
+>
+>We used the [conductor skill](https://github.com/wonderbird/ai-agent-workspace/tree/main/skills/conductor).
+>
+>The prompt and the entire chat with the conductor is present in [conductor-session.txt](./conductor-session.txt).
+
 Enter a weight and a date; it is kept in the browser's `localStorage`, and once there are two or more
 distinct dates a line chart of the trend appears. A proof of concept: one route, no backend, auth,
 database or tests, and the data lives only in the browser you typed it into. Next.js 16.3.6 (App Router,

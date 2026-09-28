@@ -56,7 +56,7 @@ Trade-off: not a small dependency — Recharts pulls `@reduxjs/toolkit`,
 `react-redux`, `immer`, `reselect`, `es-toolkit` and `victory-vendor` (the d3
 bundle), ~7.4 MB unpacked, and declares a `react-is` peer this project does not
 carry. Hand-rolled inline SVG ships nothing extra but means writing scales, axes
-and ticks by hand. React 19 is a permitted peer. Not installed yet.
+and ticks by hand. Installed at 3.10.1; `react-is` resolved transitively (16.13.1).
 
 Axes are explicit, not defaulted:
 - `<XAxis dataKey="recordedAt" />` — a category axis. Deliberate for a POC: it spaces dates evenly, so uneven gaps between entries are hidden.
